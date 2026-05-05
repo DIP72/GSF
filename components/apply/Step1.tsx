@@ -1,5 +1,7 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
+
 interface Step1Props {
   formData: any;
   onNext: (data: any) => void;

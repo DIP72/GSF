@@ -1,7 +1,6 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 
 interface Step4Props {
   formData: any;
@@ -11,7 +10,6 @@ interface Step4Props {
 export default function Step4({ formData, onPrev }: Step4Props) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Submit final form data
     console.log("Final form data:", formData);
     alert("Application submitted successfully!");
     localStorage.removeItem("applyFormData");

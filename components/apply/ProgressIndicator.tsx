@@ -8,7 +8,7 @@ interface ProgressIndicatorProps {
 
 export default function ProgressIndicator({ currentStep, totalSteps, steps }: ProgressIndicatorProps) {
   const progress = (currentStep / totalSteps) * 100;
-  
+
   return (
     <div className="mb-8">
       <div className="flex justify-between mb-2">
