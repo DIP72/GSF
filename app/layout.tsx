@@ -4,8 +4,13 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { PageTransition } from "@/components/layout/PageTransition";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import ClientLayout from "@/components/layout/ClientLayout";
+<<<<<<< feature/breadcrumb-v2
+import { Navbar } from "@/components/layout/Navbar";
+=======
 import ToastProvider from "@/components/ui/ToastProvider";
+>>>>>>> main
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,7 +68,12 @@ export default function RootLayout({
         <body className="min-h-full font-sans" style={{ backgroundColor: "var(--bg-base)", color: "var(--text-primary)" }}>
           <ThemeProvider>
             <PageTransition>
+<<<<<<< feature/breadcrumb-v2
+              <Navbar />
+              <Breadcrumb />
+=======
               <ToastProvider />
+>>>>>>> main
               <ClientLayout>{children}</ClientLayout>
             </PageTransition>
           </ThemeProvider>
