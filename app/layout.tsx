@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { PageTransition } from "@/components/layout/PageTransition";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import ClientLayout from "@/components/layout/ClientLayout";
 import { Navbar } from "@/components/layout/Navbar";
 
 const inter = Inter({
@@ -65,7 +66,7 @@ export default function RootLayout({
             <PageTransition>
               <Navbar />
               <Breadcrumb />
-              {children}
+              <ClientLayout>{children}</ClientLayout>
             </PageTransition>
           </ThemeProvider>
         </body>
