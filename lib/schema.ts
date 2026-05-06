@@ -13,18 +13,19 @@ import {
 // USERS (synced from Clerk via webhooks)
 // ===================================================
 export const users = pgTable("users", {
-  id:               uuid("id").defaultRandom().primaryKey(),
-  clerkUserId:      text("clerk_user_id").notNull().unique(),
-  email:            text("email").notNull(),
-  firstName:        text("first_name").default(""),
-  lastName:         text("last_name").default(""),
-  imageUrl:         text("image_url"),
+  id:            uuid("id").defaultRandom().primaryKey(),
+  clerkId:       text("clerk_id").notNull().unique(),
+  name:          text("name").notNull(),
+  email:         text("email").notNull(),
+  role:          text("role").default("student"),
+  cohortId:      uuid("cohort_id"),
+  avatarUrl:     text("avatar_url"),
+  bio:           text("bio"),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  publicMetadata:   jsonb("public_metadata").$type<any>().default({}),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  unsafeMetadata:   jsonb("unsafe_metadata").$type<any>().default({}),
-  createdAt:        timestamp("created_at").defaultNow(),
-  updatedAt:        timestamp("updated_at").defaultNow(),
+  onboarding:    jsonb("onboarding").$type<any>().default({}),
+  isActive:      boolean("is_active").default(true),
+  createdAt:     timestamp("created_at").defaultNow(),
+  updatedAt:     timestamp("updated_at").defaultNow(),
 });
 
 // ===================================================

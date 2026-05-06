@@ -1,5 +1,4 @@
 import { Webhook } from "svix";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { users } from "@/lib/schema";
@@ -29,10 +28,9 @@ export async function POST(req: Request) {
     );
   }
 
-  const headersList = await headers();
-  const svixId = headersList.get("svix-id");
-  const svixTimestamp = headersList.get("svix-timestamp");
-  const svixSignature = headersList.get("svix-signature");
+  const svixId = req.headers.get("svix-id");
+  const svixTimestamp = req.headers.get("svix-timestamp");
+  const svixSignature = req.headers.get("svix-signature");
 
   if (!svixId || !svixTimestamp || !svixSignature) {
     console.error("Missing Svix headers");
@@ -60,32 +58,65 @@ export async function POST(req: Request) {
     const imageUrl = evt.data.image_url || null;
     const publicMetadata = evt.data.public_metadata || {};
     const unsafeMetadata = evt.data.unsafe_metadata || {};
+    const name = [firstName, lastName].filter(Boolean).join(" ") || email;
+    const role = (publicMetadata.role as string) === "expert" ? "expert" : "student";
+    const bio = typeof unsafeMetadata.bio === "string" ? unsafeMetadata.bio : "";
+    const onboarding = {
+      publicMetadata,
+      unsafeMetadata,
+    };
 
     if (evt.type === "user.created") {
-      await db.insert(users).values({
-        clerkUserId,
-        email,
-        firstName,
-        lastName,
-        imageUrl,
-        publicMetadata,
-        unsafeMetadata,
-      });
+      const existing = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.clerkId, clerkUserId));
+
+      if (existing.length === 0) {
+        await db.insert(users).values({
+          clerkId: clerkUserId,
+          name,
+          email,
+          role,
+          avatarUrl: imageUrl,
+          bio,
+          onboarding,
+          isActive: true,
+        });
+      }
 
       console.log(`✅ User created: ${clerkUserId}`);
     } else if (evt.type === "user.updated") {
-      await db
-        .update(users)
-        .set({
+      const existing = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.clerkId, clerkUserId));
+
+      if (existing.length === 0) {
+        await db.insert(users).values({
+          clerkId: clerkUserId,
+          name,
           email,
-          firstName,
-          lastName,
-          imageUrl,
-          publicMetadata,
-          unsafeMetadata,
-          updatedAt: new Date(),
-        })
-        .where(eq(users.clerkUserId, clerkUserId));
+          role,
+          avatarUrl: imageUrl,
+          bio,
+          onboarding,
+          isActive: true,
+        });
+      } else {
+        await db
+          .update(users)
+          .set({
+            name,
+            email,
+            role,
+            avatarUrl: imageUrl,
+            bio,
+            onboarding,
+            updatedAt: new Date(),
+          })
+          .where(eq(users.clerkId, clerkUserId));
+      }
 
       console.log(`✅ User updated: ${clerkUserId}`);
     } else {
