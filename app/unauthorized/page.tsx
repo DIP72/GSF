@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AlertTriangle, ArrowLeft, Home } from "lucide-react";
 
@@ -21,7 +21,7 @@ function homeForRole(role: Role): string {
   return "/";
 }
 
-export default function UnauthorizedPage() {
+function UnauthorizedContent() {
   const params = useSearchParams();
 
   const required = (params.get("required") ?? "unknown") as Role;
@@ -75,5 +75,17 @@ export default function UnauthorizedPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function UnauthorizedPage() {
+  return (
+    <Suspense fallback={
+      <div className="mx-auto flex min-h-[70vh] w-full max-w-2xl items-center justify-center text-sm text-text-secondary">
+        Loading...
+      </div>
+    }>
+      <UnauthorizedContent />
+    </Suspense>
   );
 }
