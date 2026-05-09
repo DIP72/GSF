@@ -102,7 +102,7 @@ export default function VenturesPage() {
 
   const filtered = ventures.filter((v) => {
     const safeName = v.name || "";
-    const safeFounder = v.founderName || "";
+    const safeFounder = v.founderName || v.founder || "";
     const safeTagline = v.tagline || "";
     const safeTags = Array.isArray(v.tags) ? v.tags : [];
     
